@@ -2,65 +2,22 @@ package com.example.android.ftp_tiniwindow_sign1;
 
 //042419 CF  following JP's version of 042319
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
-
-
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-//import android.widget.TextView;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import android.widget.Toast;
-
-//import com.example.android.sunshine.utilities.NetworkUtils;
-//import com.example.android.sunshine.utilities.OpenWeatherJsonUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-
-
-
-
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import java.io.OutputStream;
+//import java.util.Set;
 
 import static android.util.Half.NaN;
-import static android.util.Half.isNaN;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
     private EditText mTextData;
     private TextView mTextMessage;
 
-
+/*
     private String server = "107.180.55.10";
     private int port = 21;
     private String user = "Sign1@tiniliteworld.com";
     private String pass = "Sign1";
     private String fileName = "dat/Sign1.data";
 
-
+*/
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -104,22 +61,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mTextData = findViewById(R.id.et_textdata);
         mSpeed = findViewById(R.id.et_speed);
-
         mTextMessage = findViewById(R.id.message);
-
         SignDataDbHelper signDbHelper = new SignDataDbHelper(this);
-
-
         signDb = signDbHelper.getWritableDatabase();
 
         Get(new View(this));
         //formatText() ;
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+       BottomNavigationView navigation =  findViewById(R.id.navigation);
+       navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
     }
+
 
 
     void formatText(){
@@ -134,29 +88,11 @@ public class MainActivity extends AppCompatActivity {
             else if (splitData [j].length() > lineLength) {
                 splitData [j] = padRight (splitData[j], " ", lineLength);
             }
-
         }
         mlines = join( "\n", splitData) ;
         mlines = mlines.toUpperCase();
         mTextData.setText(mlines);
-    };
-
-    private String generateFileContents(){
-       int speed =  Integer.parseInt(mSpeed.getText().toString()) ;
-        formatText();
-        String retval = mTextData.getText().toString().replace("\n", "\r\n") +
-                "\r\n[trick coding version 2.2]\r\n" +
-                "020105010001FF050100" +
-                padLeft(Integer.toHexString(lineCount), "0", 2 ) +
-                padLeft(Integer.toHexString(speed * 10), "0", 2 ) ;
-
-
-        retval = retval.toUpperCase();
-
-        return retval;
-
-    };
-
+    }
 
 
 
@@ -175,7 +111,12 @@ public class MainActivity extends AppCompatActivity {
                 null
         );
 
-       if (cursor.getCount() == 0) {return;}
+        Log.d("metod-get", "" + cursor.getCount() + " records");
+       if (cursor.getCount() == 0) {
+            Log.e("method-get", "databse empty");
+           return;
+
+       }
 
         cursor.moveToLast();
 
@@ -190,11 +131,12 @@ public class MainActivity extends AppCompatActivity {
             speed = Integer.parseInt(cursor.getString(cursor.getColumnIndex(SignDataContract.SignData.COLUMN_LINE_LENGTH)));
         }
         catch (NumberFormatException ex){
-
+               Log.e("method-get", "parse int failed");
         }
 
+        cursor.close();
         mTextData.setText(textdata);
-        mSpeed.setText(speed);
+        mSpeed.setText("" +speed);
 
     }
 
@@ -218,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Add guest info to mDb
 
-        //formatText();
+        formatText();
 
         ContentValues cv = new ContentValues();
         cv.put(SignDataContract.SignData.COLUMN_TEXT_DATA, String.valueOf(mTextData.getText()));
@@ -227,11 +169,20 @@ public class MainActivity extends AppCompatActivity {
         cv.put(SignDataContract.SignData.COLUMN_LINE_COUNT, lineCount);
         cv.put(SignDataContract.SignData.COLUMN_SEASON, "original");
 
+       //Set<String> keys  = cv.keySet();
+
+
         //cv.put(SignDataContract.SignData._ID, 1);
 
 
        long rowid =  signDb.insert(  SignDataContract.SignData.TABLE_NAME, null, cv);
 
+
+       Log.d("method-save", "" +rowid);
+
+       if (rowid < 1)  {  Log.e("method-save", "db insert failed - rowid:" + rowid);
+
+       }
 
         // Update the cursor in the adapter to trigger UI to display the new list
         //mAdapter.swapCursor(getAllGuests());
@@ -343,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
         return returnValue;
     }
 
+    /*
     public class SendDataTask extends AsyncTask<String, Void, String[]> {
 
         @Override
@@ -535,5 +487,64 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+*/
 }
+
+
+//
+//import android.content.Context;
+//import android.content.Intent;
+//import android.content.SharedPreferences;
+//import android.os.AsyncTask;
+//import android.support.v7.widget.LinearLayoutManager;
+//import android.support.v7.widget.RecyclerView;
+//import android.view.Menu;
+//import android.view.MenuInflater;
+//import android.widget.ProgressBar;
+//import android.content.Context;
+//import android.content.Intent;
+//import android.content.SharedPreferences;
+//import android.os.AsyncTask;
+//import android.os.Bundle;
+//import android.support.v7.app.AppCompatActivity;
+////import android.widget.TextView;
+//import android.util.Log;
+//import android.view.View;
+//import org.apache.commons.net.ftp.FTP;
+//import org.apache.commons.net.ftp.FTPClient;
+//import android.widget.Toast;
+////import com.example.android.sunshine.utilities.NetworkUtils;
+////import com.example.android.sunshine.utilities.OpenWeatherJsonUtils;
+//import java.io.IOException;
+//import java.io.InputStream;
+//import java.io.OutputStream;
+//import java.net.URL;
+//import android.os.AsyncTask;
+//import android.os.Bundle;
+//import android.support.v7.app.AppCompatActivity;
+//import android.util.Log;
+//import android.view.MenuItem;
+//import android.view.View;
+//import android.widget.EditText;
+//import android.widget.TextView;
+//import java.io.OutputStream;
+//import static android.util.Half.isNaN;
+
+
+/**
+ private String generateFileContents(){
+ int speed =  Integer.parseInt(mSpeed.getText().toString()) ;
+ formatText();
+ String retval = mTextData.getText().toString().replace("\n", "\r\n") +
+ "\r\n[trick coding version 2.2]\r\n" +
+ "020105010001FF050100" +
+ padLeft(Integer.toHexString(lineCount), "0", 2 ) +
+ padLeft(Integer.toHexString(speed * 10), "0", 2 ) ;
+
+
+ retval = retval.toUpperCase();
+
+ return retval;
+
+ };
+ */

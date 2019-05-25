@@ -28,6 +28,16 @@ android {
 dependencies {
 
 
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    testImplementation 'junit:junit:4.12'
+
+
+
     implementation group: 'commons-net', name: 'commons-net', version: '3.6'
     //jp 030319 required to use FTP libraries
 
@@ -35,23 +45,45 @@ dependencies {
     //implementation 'com.android.support:appcompat-v7:28.1.0'
    // implementation 'com.android.support:recyclerview-v7:28.1.0'
 
+
+
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2')
+
+
+            //{
+        //exclude group: 'com.android.support', module: 'support-annotations'
+    //})
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+   implementation 'com.android.support:recyclerview-v7:28.0.0'
+    testImplementation 'junit:junit:4.12'
+
+
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     //implementation 'com.android.support:design:28.1.0'
     androidTestImplementation 'junit:junit:4.12'
+
+    //android-sdk/tools/support/annotations.jar
+    //android-sdk/extras/android/support/annotations/annotations.jar
+
     androidTestImplementation 'com.android.support:support-annotations:28.0.0'
+    //androidTestImplementation 'com.android.support:annotations-annotations:28.0.0'
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
 
 
     //implementation fileTree(dir: 'libs', include: ['*.jar'])
     //implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+  //  implementation 'com.android.support:appcompat-v7:28.0.0'
     //implementation 'com.android.support:design:28.0.0-rc02'
     implementation 'com.android.support:design:28.0.0'
     //implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     //implementation 'com.android.support:support-vector-drawable:28.0.0-rc02'
     implementation 'com.android.support:support-vector-drawable:28.0.0'
-    testImplementation 'junit:junit:4.12'
+    //testImplementation 'junit:junit:4.12'
     //androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+   // implementation files('com.android.support:support-annotations:25.1.0')
+
+
 }

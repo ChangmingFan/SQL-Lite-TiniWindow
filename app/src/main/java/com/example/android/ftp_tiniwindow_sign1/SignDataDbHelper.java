@@ -4,15 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-
-
 public class SignDataDbHelper extends SQLiteOpenHelper {
 
     // The database name
     private static final String DATABASE_NAME = "signdata.db";
 
     // If you change the database schema, you must increment the database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Constructor
     public SignDataDbHelper(Context context) {
@@ -27,6 +25,7 @@ public class SignDataDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_SIGNDATA_TABLE = "CREATE TABLE " + SignDataContract.SignData.TABLE_NAME + " (" +
                 SignDataContract.SignData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 SignDataContract.SignData.COLUMN_SEASON + " TEXT NOT NULL, " +
+                SignDataContract.SignData.COLUMN_TEXT_DATA + " TEXT NOT NULL, " +
                 SignDataContract.SignData.COLUMN_LINE_LENGTH + " INTEGER NOT NULL, " +
                 SignDataContract.SignData.COLUMN_LINE_COUNT + " INTEGER NOT NULL, " +
                 SignDataContract.SignData.COLUMN_SPEED+ " INTEGER NOT NULL" +

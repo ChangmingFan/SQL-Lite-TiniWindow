@@ -4,8 +4,6 @@ import android.provider.BaseColumns;
 
 public class SignDataContract {
 
-
-
     public static final class SignData implements BaseColumns {
         public static final String TABLE_NAME = "signData";
         public static final String COLUMN_SEASON= "season";
